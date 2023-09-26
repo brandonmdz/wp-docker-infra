@@ -13,7 +13,7 @@ This repository contains a Docker-based infrastructure for setting up a new Word
 git clone https://github.com/brandonmdz/wp-docker-infra.git
 cd wp-docker-infra
 ```
-###Step 2: Run the First-Time Script
+### Step 2: Run the First-Time Script
 
 First we need to give execution permission to the script:
 
@@ -27,7 +27,7 @@ And now we can execute it:
 ```
 This script will create the necessary volumes, download WordPress, and set up the initial environment.
 
-###Step 3: Start the Docker Compose
+### Step 3: Start the Docker Compose
 ```
 docker-compose up -d
 ```
