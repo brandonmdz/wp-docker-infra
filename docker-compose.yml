@@ -1,0 +1,58 @@
+version: '3.7'
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - type: 'bind'
+        source: './vols/mysql'
+        target: '/var/lib/mysql'
+      - type: 'bind'
+        source: './vols/mysql'
+        target: '/etc/mysql/conf.d' 
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      MYSQL_DATABASE_FILE: /run/secrets/mysql_dbname
+    secrets:
+      - mysql_root_password
+      - mysql_dbname
+
+  php-fpm:
+    build: 
+      context: ./php-fpm
+      dockerfile: Dockerfile
+    container_name: php-fpm
+    ports:
+      - 9000:9000
+    volumes:
+      - type: 'bind'
+        source: './deps/wp/wp-config.php'
+        target: '/var/www/html/wp-config.php'
+      - type: 'bind'
+        source: './vols/wordpress'
+        target: '/var/www/html/'
+      
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - type: 'bind'
+        source: './deps/nginx'
+        target: '/etc/nginx/conf.d'
+      - type: 'bind'
+        source: './vols/wordpress'
+        target: '/var/www/html/'
+    ports:
+      - 8080:80
+
+  redis:
+      image: redis:7.2.1
+      ports:
+      - 6379:6379
+
+secrets:
+  mysql_root_password:
+    file: ./secrets/mysql_root_password
+  mysql_dbname:
+    file: ./secrets/mysql_dbname
